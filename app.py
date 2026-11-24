@@ -67,7 +67,9 @@ POS_SHORT = {"Goalkeeper":"GK","Right Back":"RB","Left Back":"LB","Right Center 
 
 
 # ── data (cached) ─────────────────────────────────────────────────────────────
-@st.cache_data(show_spinner=False)
+# Lite build: the raw event frames are shared (cache_resource) rather than copied on
+# every rerun, which keeps memory flat on a small hosted server. Nothing mutates them.
+@st.cache_resource(show_spinner=False)
 def load_city():
     ev = get_all_events(); mt = get_city_matches(); sq = get_city_squad_stats()
     pos = get_player_positions(); opps = get_opponents()
@@ -98,12 +100,12 @@ def load_all_pl_matches():
     return get_all_pl_matches()
 all_pl_matches = load_all_pl_matches()
 
-@st.cache_data(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def load_opp_full(opp): return get_team_full_matches(opp)
-@st.cache_data(show_spinner=False)
+@st.cache_resource(show_spinner=False)
 def load_opp_vs(opp): return get_opponent_events(opp)
 @st.cache_data(show_spinner=False)
-def load_elo(): return compute_elo_ratings(__import__("statsbombpy").sb.matches(competition_id=2, season_id=27))
+def load_elo(): return compute_elo_ratings(get_all_pl_matches())
 
 # ── per-opponent scouting (cached by opponent name) ───────────────────────────
 # These were previously recomputed on every rerun (every slider/tab/button), which
@@ -528,7 +530,8 @@ _hb[1].markdown('<div class="brand" style="margin-top:2px">Pitch<span>Instinct</
                 '<div style="font-size:.82rem;color:#9FB1C8;letter-spacing:4px;font-weight:600;margin-top:2px">CITY MANAGER SYSTEM</div>',
                 unsafe_allow_html=True)
 opponent = _hb[2].selectbox("Opponent", opponents,
-                            index=opponents.index("Arsenal") if "Arsenal" in opponents else 0)
+                            index=opponents.index("Arsenal") if "Arsenal" in opponents else 0,
+                            help="Online demo build: three opponents are preloaded. The full version covers all 19.")
 formation_name = _hb[3].selectbox("Formation", list(FORMATIONS.keys()))
 formation = FORMATIONS[formation_name]
 with _hb[4]:
@@ -1641,7 +1644,7 @@ elif page == "Model Validation":
     "always-pick-the-home-team baseline and a published benchmark, so you can judge if it's genuinely adding signal.",
     ])
     with st.spinner("Backtesting..."):
-        allm = __import__("statsbombpy").sb.matches(competition_id=2, season_id=27)
+        allm = get_all_pl_matches()
         bt = F.backtest_elo(allm)
     c = st.columns(3)
     c[0].markdown(ui.stat_card("Elo accuracy", f"{bt['accuracy']}%", f"{bt['games']} decisive games"), unsafe_allow_html=True)

@@ -108,7 +108,7 @@ def detect_lines(img_bgr, mask=None):
                             minLineLength=70, maxLineGap=25)
     segs = []
     if lines is not None:
-        for l in lines[:, 0, :]:
+        for l in np.asarray(lines).reshape(-1, 4):
             segs.append(tuple(int(v) for v in l))
     return segs, edges
 

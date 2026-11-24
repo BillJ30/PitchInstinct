@@ -17,6 +17,11 @@ OUR_TEAM       = "Manchester City"
 CACHE_DIR      = os.path.join(os.path.dirname(__file__), ".cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
+# Lite demo build: only these opponents are offered, and their data ships pre-cached in
+# .cache/ so the hosted app never has to download from StatsBomb.
+LITE = True
+LITE_OPPONENTS = ["Arsenal", "Leicester City", "Tottenham Hotspur"]
+
 # Per-team locks so a background prefetch and a foreground load can't fetch/write the
 # same team's parquet at the same moment (see get_team_full_matches).
 _team_locks = {}
@@ -191,7 +196,10 @@ def get_city_squad_stats() -> pd.DataFrame:
 
 
 def get_opponents() -> list:
-    return sorted(get_city_matches()["opponent"].unique())
+    opps = sorted(get_city_matches()["opponent"].unique())
+    if LITE:
+        opps = [o for o in opps if o in LITE_OPPONENTS]
+    return opps
 
 
 def get_player_positions():

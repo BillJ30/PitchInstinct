@@ -36,6 +36,10 @@ The app only uses information available **before** the selected fixture date, so
 
 **Spatial and vision.** Pitch control, defensive shape and Voronoi regions are built from StatsBomb's shot freeze frames, standing in for tracking data. The Vision Lab runs an OpenCV pipeline (pitch segmentation, line detection, player detection, team assignment with k-means, homography) on a generated pitch image. It shows what a real tracking system would feed into the spatial analysis.
 
+## Online demo (lite build)
+
+The `lite` branch is a hosted-friendly version of the same app. Every page and model is included, but the opponent list is cut to three sides (Arsenal, Leicester City and Tottenham Hotspur), and their data ships pre-cached in `.cache/` (about 20 MB), so the app never has to download from StatsBomb while someone is using it. The `main` branch is the full version with all 19 opponents.
+
 ## Run it locally
 
 You need **Python 3.10 or newer**.

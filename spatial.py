@@ -229,7 +229,7 @@ def shot_pressure_table(events: pd.DataFrame, team: str) -> pd.DataFrame:
         for _, d in defs.iterrows():
             pv = np.array([d["x"] - sx, d["y"] - sy], dtype=float)
             if d["x"] >= sx:
-                perp = abs(np.cross(line, pv)) / L
+                perp = abs(line[0] * pv[1] - line[1] * pv[0]) / L
                 if perp < 6:
                     in_cone += 1
             dd = float(np.hypot(d["x"] - sx, d["y"] - sy))

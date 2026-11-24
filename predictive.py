@@ -119,7 +119,7 @@ def build_shot_features(events: pd.DataFrame) -> pd.DataFrame:
                         line = np.array([GOAL_X - x, GOAL_Y - y], dtype=float)
                         pv = np.array([px - x, py - y], dtype=float)
                         L = np.linalg.norm(line) + 1e-9
-                        perp = abs(np.cross(line, pv)) / L
+                        perp = abs(line[0] * pv[1] - line[1] * pv[0]) / L
                         if perp < 6:           # within ~6 yd of the channel
                             n_def += 1
                     if np.hypot(px - x, py - y) < 2.0:
