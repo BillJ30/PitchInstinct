@@ -1,5 +1,7 @@
 # PitchInstinct
 
+https://pitchinstictlite.streamlit.app/  Run the app here.
+
 **A match-preparation decision support app for a football manager, built with Python and Streamlit.**
 
 PitchInstinct puts you in the Manchester City manager's seat for the 2015/16 Premier League season. Pick the next opponent and a formation, and the app scouts that opponent, helps you choose a starting XI, and forecasts how the match and the season could go. Everything runs on StatsBomb's free open event data.
